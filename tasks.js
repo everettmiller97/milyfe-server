@@ -38,12 +38,17 @@ tasks.post("/new", (req, res) => {
 
 tasks.post("/", (req, res) => {
     const {username} = req.body;
+    try{
     const allTasks = tasksdb.prepare(`SELECT * FROM ${username}`).all();
     if(allTasks){
         res.status(200).json({
             tasks: allTasks
         });
-    }
+    }}catch(error)
+    {res.status(404).json({
+        tasks: [],
+        error: "User tasks not found"
+    })}
 });
 
 tasks.get("/users", (req, res) => {
